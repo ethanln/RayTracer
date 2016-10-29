@@ -112,4 +112,12 @@ public class Polygon extends GraphicObject implements Iterable<Edge>{
 		
 		return new Vector(xn, yn, zn);
 	}
+
+	@Override
+	public boolean equals(GraphicObject obj) {
+		if(obj.getShapeType() == ShapeType.POLYGON){
+			Polygon p = (Polygon)obj;
+		}
+		return false;
+	}
 }

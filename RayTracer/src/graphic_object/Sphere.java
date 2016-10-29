@@ -71,4 +71,16 @@ public class Sphere extends GraphicObject{
 	public Vector getNormal(Vector pt) {
 		return pt.getDirection(this.center);
 	}
+
+	@Override
+	public boolean equals(GraphicObject obj) {
+		if(obj.getShapeType() == ShapeType.SPHERE){
+			Sphere s = (Sphere)obj;
+			return s.getCenter().x == this.center.x 
+					&& s.getCenter().y == this.center.y 
+					&& s.getCenter().z == this.center.z
+					&& s.radius == this.radius;
+		}
+		return false;
+	}
 }

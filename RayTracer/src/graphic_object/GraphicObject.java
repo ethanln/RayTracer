@@ -51,6 +51,8 @@ public abstract class GraphicObject{
 	
 	public abstract Vector getNormal(Vector pt);
 	
+	public abstract boolean equals(GraphicObject obj);
+	
 	public ShapeType getShapeType() {
 		return shapeType;
 	}

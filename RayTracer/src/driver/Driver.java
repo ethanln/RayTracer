@@ -9,6 +9,7 @@ public class Driver {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
+		//Scene s = SceneParser.buildScene("scenes//SceneII.rayTracing");
 		Scene s = SceneParser.buildScene("scenes//diffuse.rayTracing");
 		RayTracer tracer = new RayTracer(s, 800, 800, 5);
 		System.out.println("Tracing...");

@@ -67,7 +67,7 @@ public class RayTracer {
 				this.root.setRay(this.coordinates[i][j].getDirection(this.scene.getCamLookFrom()));
 				this.root.setInitialPos(this.scene.getCamLookFrom());
 				this.root.setType(RayType.PRIMARY);
-				this.pixels[i][j] = this.rayTrace(this.root, this.depth).toColor();
+				this.pixels[i][j] = this.rayTrace(this.root, 0).toColor();
 
 				//System.out.println(this.root.getRay().x + ", " + this.root.getRay().y + ", " + this.root.getRay().z);
 				
@@ -83,6 +83,7 @@ public class RayTracer {
 	 * @param _ray
 	 */
 	private RColor rayTrace(Ray _ray, int currentDepth){
+		currentDepth++;
 		ArrayList<Vector> collisions = new ArrayList<Vector>();
 		ArrayList<GraphicObject> objects = new ArrayList<GraphicObject>();
 		
@@ -107,38 +108,18 @@ public class RayTracer {
 		
 		// determine which object is closest and mark the closest collision point.
 		GraphicObject closestObject = null;
-		Vector closestPoint = null;
+		Vector intersection = null;
 		float smallestDist = Float.POSITIVE_INFINITY;
 		
 		for(int i = 0; i < collisions.size(); i++){
 			if(collisions.get(i).getDirection(_ray.getInitialPos()).getMagnitude() < smallestDist){
 				closestObject = objects.get(i);
-				closestPoint = collisions.get(i);
+				intersection = collisions.get(i);
 			}
 		}
 		
-		// Calculate Color
-		// get light and normal directions
-		Vector normal = closestObject.getNormal(closestPoint).normalize();
-		Vector lightDir = this.scene.getLightSource().getDirection(closestPoint).normalize();
-		Vector eyeDir = this.scene.getCamLookFrom().getDirection(closestPoint).normalize();
+		RColor intersectionColor = computeIntensityColor(intersection, closestObject);
 		
-		float dotProductNL = normal.dotProduct(lightDir);
-		Vector reflectDir = normal.multiplyByConstant(2 * dotProductNL).subtract(lightDir).normalize();
-		float dotProductER = eyeDir.dotProduct(reflectDir);
-		
-		// get ambient color
-		RColor diffuse = this.scene.getAmbientLight().add(this.scene.getLightColor().multiplyByConstant(Math.max(0, dotProductNL)));
-		RColor ambient = closestObject.getDiffuse().multiply(diffuse);
-		
-		// get specular color	
-		RColor specular = this.scene.getLightColor().multiply(closestObject.getSpecularHighlight());
-		float phongValue = (float)Math.pow((float)Math.max(0, dotProductER), closestObject.getPhongConstant());
-		specular = specular.multiplyByConstant(phongValue);
-		
-		RColor intersectionColor = ambient.add(specular);
-		
-		// CAST RAYS:
 		// Reflective Ray
 		// TRansmission ray
 		// Shadow ray
@@ -168,6 +149,60 @@ public class RayTracer {
 		//}
 	}
 	
+	private RColor computeIntensityColor(Vector intersection, GraphicObject closestObject){
+		// Calculate Color
+		// get light and normal directions
+		Vector normal = closestObject.getNormal(intersection).normalize();
+		Vector lightDir = this.scene.getLightSource().getDirection(intersection).normalize();
+		Vector eyeDir = this.scene.getCamLookFrom().getDirection(intersection).normalize();
+		
+		float dotProductNL = normal.dotProduct(lightDir);
+		Vector reflectDir = normal.multiplyByConstant(2 * dotProductNL).subtract(lightDir).normalize();
+		float dotProductER = eyeDir.dotProduct(reflectDir);
+		
+		// get ambient color
+		//RColor diffuse = this.scene.getAmbientLight().add(this.scene.getLightColor().multiplyByConstant(Math.max(0, dotProductNL)));
+		//RColor ambient = closestObject.getDiffuse().multiply(diffuse);
+		
+		// get specular color	
+		//RColor specular = this.scene.getLightColor().multiply(closestObject.getSpecularHighlight());
+		float phongValue = (float)Math.pow((float)Math.max(0, dotProductER), closestObject.getPhongConstant());
+		//specular = specular.multiplyByConstant(phongValue);
+		
+		//if(isInShadow(intersection, closestObject)){
+		//	return new RColor(0.0f, 0.0f, 0.0f);
+		//}
+		
+		//return ambient.add(specular);
+		
+
+		RColor diffuseOne = closestObject.getDiffuse().multiply(this.scene.getAmbientLight());
+		RColor diffuseTwo = closestObject.getDiffuse().multiplyByConstant(Math.max(0, dotProductNL));
+		RColor phong = closestObject.getSpecularHighlight().multiplyByConstant(phongValue);
+		RColor appliedLight = this.scene.getLightColor().multiply(diffuseTwo.add(phong));
+		
+		// determine if intersection is within shadow.
+		if(isInShadow(intersection, closestObject)){
+			appliedLight = appliedLight.multiplyByConstant(0.0f);
+		}
+		
+		return diffuseOne.add(appliedLight);
+	}
+	
+	private boolean isInShadow(Vector intersection, GraphicObject closestObject){
+		Vector shadowRay = this.scene.getLightSource().getDirection(intersection);
+		
+		// check for any collision for the light ray.
+		for(GraphicObject obj : this.scene){
+			if(!closestObject.equals(obj)){
+				Vector collision = obj.doesCollide(intersection, shadowRay);
+				if(collision != null){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	/**
 	 * recursively compute color values starting from the bottom to the root of the tree of rays.
 	 * @return
