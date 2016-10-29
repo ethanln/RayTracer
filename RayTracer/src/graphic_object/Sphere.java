@@ -13,7 +13,7 @@ public class Sphere extends GraphicObject{
 
 	@Override
 	public Vector doesCollide(Vector initialPos, Vector direction) {
-		//Vector n = direction.normalize();
+		Vector n = direction.normalize();
 		float x0 = initialPos.x;
 		float y0 = initialPos.y;
 		float z0 = initialPos.z;
@@ -22,9 +22,9 @@ public class Sphere extends GraphicObject{
 		float cy = this.center.y;
 		float cz = this.center.z;
 		
-		float dx = direction.x;
-		float dy = direction.y;
-		float dz = direction.z;
+		float dx = n.x;
+		float dy = n.y;
+		float dz = n.z;
 		
 		float a = (dx*dx) + (dy*dy) + (dz*dz);
 		float b = 2.0f *((dx * x0) - (dx * cx) + (dy * y0) - (dy*cy) + (dz * z0) - (dz * cz));
@@ -65,5 +65,10 @@ public class Sphere extends GraphicObject{
 
 	public void setRadius(float radius) {
 		this.radius = radius;
+	}
+
+	@Override
+	public Vector getNormal(Vector pt) {
+		return pt.getDirection(this.center);
 	}
 }

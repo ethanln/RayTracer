@@ -46,19 +46,19 @@ public class SceneParserTest {
 		assertEquals(String.valueOf(directionToLight.z), "0.0");
 		
 		// test light color.
-		Color lightColor = s.getLightColor();
+		Color lightColor = s.getLightColor().toColor();
 		assertEquals(String.valueOf(lightColor.getRed()), "255");
 		assertEquals(String.valueOf(lightColor.getGreen()), "255");
 		assertEquals(String.valueOf(lightColor.getBlue()), "255");
 		
 		// test ambient light color.
-		Color ambientLight = s.getAmbientLight();
+		Color ambientLight = s.getAmbientLight().toColor();
 		assertEquals(String.valueOf(ambientLight.getRed()), "0");
 		assertEquals(String.valueOf(ambientLight.getGreen()), "0");
 		assertEquals(String.valueOf(ambientLight.getBlue()), "0");
 		
 		// test background color.
-		Color backgroundColor = s.getBackgroundColor();
+		Color backgroundColor = s.getBackgroundColor().toColor();
 		assertEquals(String.valueOf(backgroundColor.getRed()), "51");
 		assertEquals(String.valueOf(backgroundColor.getGreen()), "51");
 		assertEquals(String.valueOf(backgroundColor.getBlue()), "51");
@@ -74,9 +74,9 @@ public class SceneParserTest {
 		assertEquals(String.valueOf(sphere.getRadius()), "0.2");
 		
 		// test sphere reflective color.
-		assertEquals(String.valueOf(sphere.getReflective().getRed()), "191");
-		assertEquals(String.valueOf(sphere.getReflective().getGreen()), "191");
-		assertEquals(String.valueOf(sphere.getReflective().getBlue()), "191");
+		assertEquals(String.valueOf(sphere.getReflective().toColor().getRed()), "191");
+		assertEquals(String.valueOf(sphere.getReflective().toColor().getGreen()), "191");
+		assertEquals(String.valueOf(sphere.getReflective().toColor().getBlue()), "191");
 		
 		// test sphere reflective color.
 		assertEquals(sphere.getMassType(), MassType.TRANSPARENT);	
@@ -101,20 +101,20 @@ public class SceneParserTest {
 		assertEquals(String.valueOf(poly.getEdge(1).pt2.z), "-0.5");
 		
 		// test triangle diffuse color.
-		assertEquals(String.valueOf(poly.getDiffuse().getRed()), "0");
-		assertEquals(String.valueOf(poly.getDiffuse().getGreen()), "0");
-		assertEquals(String.valueOf(poly.getDiffuse().getBlue()), "255");
+		assertEquals(String.valueOf(poly.getDiffuse().toColor().getRed()), "0");
+		assertEquals(String.valueOf(poly.getDiffuse().toColor().getGreen()), "0");
+		assertEquals(String.valueOf(poly.getDiffuse().toColor().getBlue()), "255");
 		
 		// test triangle specular highlight color.
-		assertEquals(String.valueOf(poly.getSpecularHighlight().getRed()), "255");
-		assertEquals(String.valueOf(poly.getSpecularHighlight().getGreen()), "255");
-		assertEquals(String.valueOf(poly.getSpecularHighlight().getBlue()), "255");
+		assertEquals(String.valueOf(poly.getSpecularHighlight().toColor().getRed()), "255");
+		assertEquals(String.valueOf(poly.getSpecularHighlight().toColor().getGreen()), "255");
+		assertEquals(String.valueOf(poly.getSpecularHighlight().toColor().getBlue()), "255");
 		
 		assertEquals(String.valueOf(poly.getPhongConstant()), "4.0");
 		
-		assertEquals(String.valueOf(poly.getNormal().x), "1.0");
-		assertEquals(String.valueOf(poly.getNormal().y), "-1.0");
-		assertEquals(String.valueOf(poly.getNormal().z), "0.0");
+		assertEquals(String.valueOf(poly.getNormal(null).x), "1.0");
+		assertEquals(String.valueOf(poly.getNormal(null).y), "-1.0");
+		assertEquals(String.valueOf(poly.getNormal(null).z), "0.0");
 		
 		
 		Polygon poly_again = (Polygon)s.getGraphicObject(2);
@@ -136,20 +136,20 @@ public class SceneParserTest {
 		assertEquals(String.valueOf(poly_again.getEdge(1).pt2.z), "0.0");
 		
 		// test triangle diffuse color.
-		assertEquals(String.valueOf(poly_again.getDiffuse().getRed()), "255");
-		assertEquals(String.valueOf(poly_again.getDiffuse().getGreen()), "255");
-		assertEquals(String.valueOf(poly_again.getDiffuse().getBlue()), "0");
+		assertEquals(String.valueOf(poly_again.getDiffuse().toColor().getRed()), "255");
+		assertEquals(String.valueOf(poly_again.getDiffuse().toColor().getGreen()), "255");
+		assertEquals(String.valueOf(poly_again.getDiffuse().toColor().getBlue()), "0");
 		
 		// test triangle specular highlight color.
-		assertEquals(String.valueOf(poly_again.getSpecularHighlight().getRed()), "255");
-		assertEquals(String.valueOf(poly_again.getSpecularHighlight().getGreen()), "255");
-		assertEquals(String.valueOf(poly_again.getSpecularHighlight().getBlue()), "255");
+		assertEquals(String.valueOf(poly_again.getSpecularHighlight().toColor().getRed()), "255");
+		assertEquals(String.valueOf(poly_again.getSpecularHighlight().toColor().getGreen()), "255");
+		assertEquals(String.valueOf(poly_again.getSpecularHighlight().toColor().getBlue()), "255");
 		
 		assertEquals(String.valueOf(poly_again.getPhongConstant()), "4.0");
 		
-		assertEquals(String.valueOf(poly_again.getNormal().x), "-1.0");
-		assertEquals(String.valueOf(poly_again.getNormal().y), "-1.0");
-		assertEquals(String.valueOf(poly_again.getNormal().z), "0.0");
+		assertEquals(String.valueOf(poly_again.getNormal(null).x), "-1.0");
+		assertEquals(String.valueOf(poly_again.getNormal(null).y), "-1.0");
+		assertEquals(String.valueOf(poly_again.getNormal(null).z), "0.0");
 	}
 
 }

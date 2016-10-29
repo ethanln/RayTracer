@@ -1,6 +1,5 @@
 package util;
 
-import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -162,10 +161,10 @@ public class SceneParser {
 		
 		if(reader.hasNext()){
 			reader.next();
-			int R = (int)(255.0f * Float.parseFloat(reader.next()));
-			int G = (int)(255.0f * Float.parseFloat(reader.next()));
-			int B = (int)(255.0f * Float.parseFloat(reader.next()));
-			scene.setLightColor(new Color(R, G, B));
+			float R = Float.parseFloat(reader.next());
+			float G = Float.parseFloat(reader.next());
+			float B = Float.parseFloat(reader.next());
+			scene.setLightColor(new RColor(R, G, B));
 		}
 	}
 	
@@ -175,10 +174,10 @@ public class SceneParser {
 	 * @param reader
 	 */
 	private void parseAmbientLight(Scene scene, Scanner reader){
-		int R = (int)(255.0f * Float.parseFloat(reader.next()));
-		int G = (int)(255.0f * Float.parseFloat(reader.next()));
-		int B = (int)(255.0f * Float.parseFloat(reader.next()));
-		scene.setAmbientLight(new Color(R, G, B));
+		float R = Float.parseFloat(reader.next());
+		float G = Float.parseFloat(reader.next());
+		float B = Float.parseFloat(reader.next());
+		scene.setAmbientLight(new RColor(R, G, B));
 	}
 	
 	/**
@@ -187,10 +186,10 @@ public class SceneParser {
 	 * @param reader
 	 */
 	private void parseBackgroundColor(Scene scene, Scanner reader){
-		int R = (int)(255.0f * Float.parseFloat(reader.next()));
-		int G = (int)(255.0f * Float.parseFloat(reader.next()));
-		int B = (int)(255.0f * Float.parseFloat(reader.next()));
-		scene.setBackgroundColor(new Color(R, G, B));
+		float R = Float.parseFloat(reader.next());
+		float G = Float.parseFloat(reader.next());
+		float B = Float.parseFloat(reader.next());
+		scene.setBackgroundColor(new RColor(R, G, B));
 	}
 	
 	/**
@@ -221,17 +220,17 @@ public class SceneParser {
 					break;
 					
 				case "Diffuse":
-					int Rd = (int)(255.0f * Float.parseFloat(reader.next()));
-					int Gd = (int)(255.0f * Float.parseFloat(reader.next()));
-					int Bd = (int)(255.0f * Float.parseFloat(reader.next()));
-					s.setDiffuse(new Color(Rd, Gd, Bd));
+					float Rd = Float.parseFloat(reader.next());
+					float Gd = Float.parseFloat(reader.next());
+					float Bd = Float.parseFloat(reader.next());
+					s.setDiffuse(new RColor(Rd, Gd, Bd));
 					break;
 					
 				case "SpecularHighlight":
-					int Rs = (int)(255.0f * Float.parseFloat(reader.next()));
-					int Gs = (int)(255.0f * Float.parseFloat(reader.next()));
-					int Bs = (int)(255.0f * Float.parseFloat(reader.next()));
-					s.setSpecularHighlight(new Color(Rs, Gs, Bs));
+					float Rs = Float.parseFloat(reader.next());
+					float Gs = Float.parseFloat(reader.next());
+					float Bs = Float.parseFloat(reader.next());
+					s.setSpecularHighlight(new RColor(Rs, Gs, Bs));
 					break;
 					
 				case "PhongConstant":
@@ -240,10 +239,10 @@ public class SceneParser {
 					break;
 					
 				case "Reflective":
-					int Rr = (int)(255.0f * Float.parseFloat(reader.next()));
-					int Gr = (int)(255.0f * Float.parseFloat(reader.next()));
-					int Br = (int)(255.0f * Float.parseFloat(reader.next()));
-					s.setReflective(new Color(Rr, Gr, Br));
+					float Rr = Float.parseFloat(reader.next());
+					float Gr = Float.parseFloat(reader.next());
+					float Br = Float.parseFloat(reader.next());
+					s.setReflective(new RColor(Rr, Gr, Br));
 					break;
 					
 				case "Transparent":
@@ -308,17 +307,17 @@ public class SceneParser {
 			token = reader.next();
 			switch(token){				
 				case "Diffuse":
-					int Rd = (int)(255.0f * Float.parseFloat(reader.next()));
-					int Gd = (int)(255.0f * Float.parseFloat(reader.next()));
-					int Bd = (int)(255.0f * Float.parseFloat(reader.next()));
-					p.setDiffuse(new Color(Rd, Gd, Bd));
+					float Rd = Float.parseFloat(reader.next());
+					float Gd = Float.parseFloat(reader.next());
+					float Bd = Float.parseFloat(reader.next());
+					p.setDiffuse(new RColor(Rd, Gd, Bd));
 					break;
 					
 				case "SpecularHighlight":
-					int Rs = (int)(255.0f * Float.parseFloat(reader.next()));
-					int Gs = (int)(255.0f * Float.parseFloat(reader.next()));
-					int Bs = (int)(255.0f * Float.parseFloat(reader.next()));
-					p.setSpecularHighlight(new Color(Rs, Gs, Bs));
+					float Rs = Float.parseFloat(reader.next());
+					float Gs = Float.parseFloat(reader.next());
+					float Bs = Float.parseFloat(reader.next());
+					p.setSpecularHighlight(new RColor(Rs, Gs, Bs));
 					break;
 					
 				case "PhongConstant":
@@ -327,10 +326,10 @@ public class SceneParser {
 					break;
 					
 				case "Reflective":
-					int Rr = (int)(255.0f * Float.parseFloat(reader.next()));
-					int Gr = (int)(255.0f * Float.parseFloat(reader.next()));
-					int Br = (int)(255.0f * Float.parseFloat(reader.next()));
-					p.setReflective(new Color(Rr, Gr, Br));
+					float Rr = Float.parseFloat(reader.next());
+					float Gr = Float.parseFloat(reader.next());
+					float Br = Float.parseFloat(reader.next());
+					p.setReflective(new RColor(Rr, Gr, Br));
 					break;
 					
 				case "Transparent":

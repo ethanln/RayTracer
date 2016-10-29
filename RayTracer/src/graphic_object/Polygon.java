@@ -18,7 +18,11 @@ public class Polygon extends GraphicObject implements Iterable<Edge>{
 
 	@Override
 	public Vector doesCollide(Vector initialPos, Vector direction) {
-		Vector n = this.getNormal();
+		if(true){
+			return null; // hold off on polygons for the time being.
+		}
+		Vector normalDirection = direction.normalize();
+		Vector n = this.getNormal(null).normalize();
 		ArrayList<UV> vertices = new ArrayList<UV>();
 		
 		// get axis with the highest value.
@@ -30,7 +34,7 @@ public class Polygon extends GraphicObject implements Iterable<Edge>{
 		}
 		
 		// Project ray.
-		UV Ri = direction.toUV(axisEliminate);
+		UV Ri = normalDirection.toUV(axisEliminate);
 		
 		ArrayList<UV> translatedVertices = new ArrayList<UV>();
 		// Translate all points.
@@ -70,7 +74,10 @@ public class Polygon extends GraphicObject implements Iterable<Edge>{
 			}
 			signHolder = nextSignHolder;
 		}
-		
+		if(numCrossings > 0){
+			int i = 0;
+			i = 1;
+		}
 		if(numCrossings % 2 != 0){
 			return new Vector(0.0f, 0.0f, 0.0f);
 		}
@@ -90,7 +97,8 @@ public class Polygon extends GraphicObject implements Iterable<Edge>{
 		return this.edges.get(index);
 	}
 	
-	public Vector getNormal(){
+	@Override
+	public Vector getNormal(Vector pt){
 		Vector pt1 = this.edges.get(0).pt1;
 		Vector pt2 = this.edges.get(1).pt1;
 		Vector pt3 = this.edges.get(2).pt1;

@@ -1,7 +1,7 @@
 package graphic_object;
 
-import java.awt.Color;
 
+import util.RColor;
 import util.Vector;
 
 public abstract class GraphicObject{
@@ -22,9 +22,9 @@ public abstract class GraphicObject{
 	private MassType massType;
 	
 	// MATERIALS
-	private Color reflective;
-	private Color diffuse;
-	private Color specularHighlight;
+	private RColor reflective;
+	private RColor diffuse;
+	private RColor specularHighlight;
 	
 	private float phongConstant;
 	
@@ -35,6 +35,10 @@ public abstract class GraphicObject{
 	public GraphicObject(ShapeType _shapeType, MassType _massType){
 		this.shapeType = _shapeType;
 		this.massType = _massType;
+		this.reflective = new RColor(0.0f, 0.0f, 0.0f);
+		this.diffuse = new RColor(0.0f, 0.0f, 0.0f);
+		this.specularHighlight = new RColor(0.0f, 0.0f, 0.0f);
+		this.phongConstant = 0.0f;
 	}
 	
 	/**
@@ -45,31 +49,33 @@ public abstract class GraphicObject{
 	 */
 	public abstract Vector doesCollide(Vector initialPos, Vector direction);
 	
+	public abstract Vector getNormal(Vector pt);
+	
 	public ShapeType getShapeType() {
 		return shapeType;
 	}
 
-	public Color getReflective() {
+	public RColor getReflective() {
 		return reflective;
 	}
 
-	public void setReflective(Color reflective) {
+	public void setReflective(RColor reflective) {
 		this.reflective = reflective;
 	}
 
-	public Color getDiffuse() {
+	public RColor getDiffuse() {
 		return diffuse;
 	}
 
-	public void setDiffuse(Color diffuse) {
+	public void setDiffuse(RColor diffuse) {
 		this.diffuse = diffuse;
 	}
 
-	public Color getSpecularHighlight() {
+	public RColor getSpecularHighlight() {
 		return specularHighlight;
 	}
 
-	public void setSpecularHighlight(Color specularHighlight) {
+	public void setSpecularHighlight(RColor specularHighlight) {
 		this.specularHighlight = specularHighlight;
 	}
 

@@ -82,32 +82,6 @@ public class Vector {
 		}
 	}
 	
-	public float getVerticalCoordinate(Axis axis){
-		switch(axis){
-			case X:
-				return this.z;
-			case Y:
-				return this.z;
-			case Z:
-				return this.y;
-			default:
-				return this.x;
-		}
-	}
-	
-	public float getHorizontalCoordinate(Axis axis){
-		switch(axis){
-			case X:
-				return this.y;
-			case Y:
-				return this.x;
-			case Z:
-				return this.x;
-			default:
-				return this.x;
-		}
-	}
-	
 	public UV toUV(Axis axis){
 		switch(axis){
 			case X:
@@ -123,5 +97,17 @@ public class Vector {
 	
 	public Vector translateVector(Vector translation){
 		return new Vector(this.x - translation.x, this.y - translation.y, this.z - translation.z);
+	}
+	
+	public float dotProduct(Vector vec){
+		return (this.x * vec.x) + (this.y * vec.y) + (this.z * vec.z);
+	}
+	
+	public Vector multiplyByConstant(float constant){
+		return new Vector(this.x * constant, this.y * constant, this.z * constant);
+	}
+	
+	public Vector subtract(Vector vec){
+		return new Vector(this.x - vec.x, this.y - vec.y, this.z - vec.z);
 	}
 }

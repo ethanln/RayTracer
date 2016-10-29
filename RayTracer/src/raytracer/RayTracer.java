@@ -1,11 +1,17 @@
 package raytracer;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 import graphic_object.GraphicObject;
 import model.Scene;
 import raytracer.Ray.RayType;
+import util.RColor;
 import util.Vector;
 
 public class RayTracer {
@@ -53,7 +59,6 @@ public class RayTracer {
 	 */
 	public boolean trace(){
 		for(int i = 0; i < this.height; i++){
-			String line = "";
 			for(int j = 0; j < this.width; j++){
 				// Setup ray tree.
 				this.root = new Ray();
@@ -62,18 +67,13 @@ public class RayTracer {
 				this.root.setRay(this.coordinates[i][j].getDirection(this.scene.getCamLookFrom()));
 				this.root.setInitialPos(this.scene.getCamLookFrom());
 				this.root.setType(RayType.PRIMARY);
-				if(this.rayTrace(this.root, 1)){
-					line += "0";
-				}
-				else{
-					line += "-";
-				}
+				this.pixels[i][j] = this.rayTrace(this.root, this.depth).toColor();
+
 				//System.out.println(this.root.getRay().x + ", " + this.root.getRay().y + ", " + this.root.getRay().z);
 				
 				// determine pixel color after getting ray tree is finished and store it in pixel matrix.
 				// this.pixels[i][j] = this.computeColor(this.root);
 			}
-			System.out.println(line);
 		}
 		return false;
 	}
@@ -82,7 +82,7 @@ public class RayTracer {
 	 * Recursively compute all rays.
 	 * @param _ray
 	 */
-	private boolean rayTrace(Ray _ray, int currentDepth){
+	private RColor rayTrace(Ray _ray, int currentDepth){
 		ArrayList<Vector> collisions = new ArrayList<Vector>();
 		ArrayList<GraphicObject> objects = new ArrayList<GraphicObject>();
 		
@@ -98,9 +98,11 @@ public class RayTracer {
 		//if no collision, set primary ray to background color, other words keep color null.
 		if(collisions.size() == 0){
 			if(_ray.getType() == RayType.PRIMARY){
-				_ray.setColor(this.scene.getBackgroundColor());
+				return this.scene.getBackgroundColor();
+				//_ray.setColor(this.scene.getBackgroundColor());
 			}
-			return false;  // TEMP
+			return null;  
+			// return false;
 		}
 		
 		// determine which object is closest and mark the closest collision point.
@@ -114,8 +116,35 @@ public class RayTracer {
 				closestPoint = collisions.get(i);
 			}
 		}
-
-		return collisions.size() > 0;
+		
+		// Calculate Color
+		// get light and normal directions
+		Vector normal = closestObject.getNormal(closestPoint).normalize();
+		Vector lightDir = this.scene.getLightSource().getDirection(closestPoint).normalize();
+		Vector eyeDir = this.scene.getCamLookFrom().getDirection(closestPoint).normalize();
+		
+		float dotProductNL = normal.dotProduct(lightDir);
+		Vector reflectDir = normal.multiplyByConstant(2 * dotProductNL).subtract(lightDir).normalize();
+		float dotProductER = eyeDir.dotProduct(reflectDir);
+		
+		// get ambient color
+		RColor diffuse = this.scene.getAmbientLight().add(this.scene.getLightColor().multiplyByConstant(Math.max(0, dotProductNL)));
+		RColor ambient = closestObject.getDiffuse().multiply(diffuse);
+		
+		// get specular color	
+		RColor specular = this.scene.getLightColor().multiply(closestObject.getSpecularHighlight());
+		float phongValue = (float)Math.pow((float)Math.max(0, dotProductER), closestObject.getPhongConstant());
+		specular = specular.multiplyByConstant(phongValue);
+		
+		RColor intersectionColor = ambient.add(specular);
+		
+		// CAST RAYS:
+		// Reflective Ray
+		// TRansmission ray
+		// Shadow ray
+		return intersectionColor;
+		// return color = ColorRef(ColorAmbient + ColorLight * max(0, Vnormal . Vlight)) + ColorLight * ColorSpecular * max(0, e . (2 * Vnormal * (Vnormal . Vlight) - Vlight))^phongConstant
+		//return collisions.size() > 0;
 		// =====TODO: check for any collision by iterating through all objects, temporarily store the object for later use.
 		// =====	TODO: if no collision, set ray type to NON and return
 		// =====	TODO: if collision, mark collision point.
@@ -152,6 +181,21 @@ public class RayTracer {
 	 * draws all currently stored pixels to a image file.
 	 */
 	public void draw(){
+		BufferedImage image = null;
+		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		
+		for(int i=0; i < height;i++){
+            for(int j=0; j < width; j++){
+                image.setRGB(j, i, pixels[i][j].getRGB());
+            }
+        }
+		File f = new File("output\\Output.jpg");  //output file path
+		try {
+			ImageIO.write(image, "jpg", f);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// TODO: draws all pixels to a image file.
 	}
 }
