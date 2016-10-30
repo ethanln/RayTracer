@@ -99,6 +99,10 @@ public class Vector {
 		return new Vector(this.x - translation.x, this.y - translation.y, this.z - translation.z);
 	}
 	
+	public Vector add(Vector translation){
+		return new Vector(this.x + translation.x, this.y + translation.y, this.z + translation.z);
+	}
+	
 	public float dotProduct(Vector vec){
 		return (this.x * vec.x) + (this.y * vec.y) + (this.z * vec.z);
 	}

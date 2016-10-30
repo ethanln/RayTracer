@@ -115,6 +115,10 @@ public class Polygon extends GraphicObject implements Iterable<Edge>{
 
 	@Override
 	public boolean equals(GraphicObject obj) {
+		if(obj == null){
+			return false;
+		}
+		
 		if(obj.getShapeType() == ShapeType.POLYGON){
 			Polygon p = (Polygon)obj;
 		}

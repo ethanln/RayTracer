@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import graphic_object.GraphicObject;
 import util.Vector;
 
 public class Ray implements Iterable<Ray>{
@@ -49,6 +50,11 @@ public class Ray implements Iterable<Ray>{
 	 */
 	private ArrayList<Ray> rays;
 	
+	/**
+	 * the object from which the ray was casted;
+	 */
+	private GraphicObject previousObject;
+	
 	public Ray(){	
 		this.color = null;
 		this.collisionPos = null;
@@ -57,6 +63,8 @@ public class Ray implements Iterable<Ray>{
 		this.type = RayType.NONE;
 		
 		this.rays = new ArrayList<Ray>();
+		
+		this.previousObject = null;
 	}
 
 	public Color getColor() {
@@ -107,5 +115,13 @@ public class Ray implements Iterable<Ray>{
 
 	public void setInitialPos(Vector initialPos) {
 		this.initialPos = initialPos;
+	}
+
+	public GraphicObject getPreviousObject() {
+		return previousObject;
+	}
+
+	public void setPreviousObject(GraphicObject previousObject) {
+		this.previousObject = previousObject;
 	}
 }

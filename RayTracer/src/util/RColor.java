@@ -47,4 +47,8 @@ public class RColor {
 	public RColor multiplyByConstant(float constant){
 		return new RColor(this.R * constant, this.G * constant, this.B * constant);
 	}
+	
+	public boolean isBlack(){
+		return this.R == 0.0f && this.G == 0.0f && this.B == 0.0f;
+	}
 }

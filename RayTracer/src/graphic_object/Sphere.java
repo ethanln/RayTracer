@@ -74,6 +74,10 @@ public class Sphere extends GraphicObject{
 
 	@Override
 	public boolean equals(GraphicObject obj) {
+		if(obj == null){
+			return false;
+		}
+		
 		if(obj.getShapeType() == ShapeType.SPHERE){
 			Sphere s = (Sphere)obj;
 			return s.getCenter().x == this.center.x 
