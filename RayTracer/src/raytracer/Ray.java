@@ -55,6 +55,11 @@ public class Ray implements Iterable<Ray>{
 	 */
 	private GraphicObject previousObject;
 	
+	/**
+	 * marker used to determine if ray is inside shape.
+	 */
+	private boolean isInsideShape;
+	
 	public Ray(){	
 		this.color = null;
 		this.collisionPos = null;
@@ -65,6 +70,8 @@ public class Ray implements Iterable<Ray>{
 		this.rays = new ArrayList<Ray>();
 		
 		this.previousObject = null;
+		
+		this.isInsideShape = false;
 	}
 
 	public Color getColor() {
@@ -123,5 +130,13 @@ public class Ray implements Iterable<Ray>{
 
 	public void setPreviousObject(GraphicObject previousObject) {
 		this.previousObject = previousObject;
+	}
+
+	public boolean isInsideShape() {
+		return isInsideShape;
+	}
+
+	public void setInsideShape(boolean isInsideShape) {
+		this.isInsideShape = isInsideShape;
 	}
 }

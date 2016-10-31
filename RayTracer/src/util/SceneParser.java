@@ -245,8 +245,17 @@ public class SceneParser {
 					s.setReflective(new RColor(Rr, Gr, Br));
 					break;
 					
-				case "Transparent":
+				case "Transparent":	
 					s.setMassType(MassType.TRANSPARENT);
+					float Rt = Float.parseFloat(reader.next());
+					float Gt = Float.parseFloat(reader.next());
+					float Bt = Float.parseFloat(reader.next());
+					s.setTransparency(new RColor(Rt, Gt, Bt));
+					break;
+				
+				case "Refraction":
+					float refraction = Float.parseFloat(reader.next());
+					s.setRefractionMaterial(refraction);
 					break;
 					
 				default:
@@ -332,8 +341,17 @@ public class SceneParser {
 					p.setReflective(new RColor(Rr, Gr, Br));
 					break;
 					
-				case "Transparent":
+				case "Transparent":	
 					p.setMassType(MassType.TRANSPARENT);
+					float Rt = Float.parseFloat(reader.next());
+					float Gt = Float.parseFloat(reader.next());
+					float Bt = Float.parseFloat(reader.next());
+					p.setTransparency(new RColor(Rt, Gt, Bt));
+					break;
+				
+				case "Refraction":
+					float refraction = Float.parseFloat(reader.next());
+					p.setRefractionMaterial(refraction);
 					break;
 					
 				default:

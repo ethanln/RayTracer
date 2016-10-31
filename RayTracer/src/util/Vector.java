@@ -114,4 +114,8 @@ public class Vector {
 	public Vector subtract(Vector vec){
 		return new Vector(this.x - vec.x, this.y - vec.y, this.z - vec.z);
 	}
+	
+	public Vector divideByConstant(float constant){
+		return new Vector(this.x / constant, this.y / constant, this.z / constant);
+	}
 }

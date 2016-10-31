@@ -14,6 +14,8 @@ import graphic_object.GraphicObject.ShapeType;
 import graphic_object.Sphere;
 import model.Scene;
 import raytracer.Ray.RayType;
+import shader.ShaderFactory;
+import shader.ShaderFactory.ShaderType;
 import util.RColor;
 import util.Vector;
 
@@ -80,20 +82,20 @@ public class RayTracer {
 	 * Recursively compute all rays.
 	 * @param _ray
 	 */
-	private RColor rayTrace(Ray _ray, int currentDepth){
+	public RColor rayTrace(Ray _ray, int currentDepth){
+		// increment depth
 		currentDepth++;
 		// find colliding objects
 		CollisionInstance collisionInfo = this.findCollidingObject(_ray);
 
-		if(collisionInfo == null){
-			if(_ray.getType() == RayType.PRIMARY){
+		if(collisionInfo == null || collisionInfo.getClosestObject() == null || collisionInfo.getIntersection() == null){
+			if(_ray.getType() == RayType.PRIMARY || _ray.getType() == RayType.TRANSMISSION){
 				return this.scene.getBackgroundColor();
 			}
 			return null;  
 		}
-		
 		RColor intensityColor = computeIntensityColor(collisionInfo, currentDepth, _ray);
-			
+
 		return intensityColor;
 	}
 	
@@ -104,78 +106,24 @@ public class RayTracer {
 	 * @return
 	 */
 	private RColor computeIntensityColor(CollisionInstance collisionInfo, int currentDepth, Ray _ray){
-		// get light and normal directions
-		Vector normal = collisionInfo.getClosestObject().getNormal(collisionInfo.getIntersection()).normalize();
-		Vector lightDir = this.scene.getLightSource().getDirection(collisionInfo.getIntersection()).normalize();
-		Vector eyeDir = this.scene.getCamLookFrom().getDirection(collisionInfo.getIntersection()).normalize();
-		
-		float dotProductNL = normal.dotProduct(lightDir);
-		Vector reflectDir = normal.multiplyByConstant(2 * dotProductNL).subtract(lightDir).normalize();
-		float dotProductER = eyeDir.dotProduct(reflectDir);
-		float phongValue = (float)Math.pow((float)Math.max(0, dotProductER), collisionInfo.getClosestObject().getPhongConstant());
-
-		RColor ambient = collisionInfo.getClosestObject().getDiffuse().multiply(this.scene.getAmbientLight());
-		RColor diffuse = collisionInfo.getClosestObject().getDiffuse().multiplyByConstant(Math.max(0, dotProductNL));
-		RColor phong = collisionInfo.getClosestObject().getSpecularHighlight().multiplyByConstant(phongValue);
-		RColor appliedLight = this.scene.getLightColor().multiply(diffuse.add(phong));
-		
-		// determine if intersection is within shadow.
-		boolean isShadow = isInShadow(collisionInfo.getIntersection(), collisionInfo.getClosestObject());
-		if(isShadow){
-			appliedLight = appliedLight.multiplyByConstant(0.0f);
-		}
-		
-		ambient = ambient.add(appliedLight);
+		// get ambient light
+		RColor intersectionColor = ShaderFactory.makeShader(ShaderType.AMBIENT).doShader(this, collisionInfo, _ray, currentDepth);
 		
 		if(currentDepth < this.depthLimit){
-			if(!collisionInfo.getClosestObject().getReflective().isBlack() && !isShadow && _ray.getType() != RayType.REFLECTION){
-				//r = d – 2n(d · n)
-				float dotProductDN = _ray.getRay().normalize().dotProduct(normal) * 2.0f;
-				normal = normal.multiplyByConstant(dotProductDN);
-				Vector reflection = _ray.getRay().normalize().subtract(normal).normalize();
-					
-				Ray reflectionRay = new Ray();
-				reflectionRay.setRay(reflection);
-				reflectionRay.setInitialPos(collisionInfo.getIntersection());
-				reflectionRay.setType(RayType.REFLECTION);
-				reflectionRay.setPreviousObject(collisionInfo.getClosestObject());
-				
-				// recursive call.
-				RColor rayColorResult = this.rayTrace(reflectionRay, currentDepth);
-				
-				if(rayColorResult != null){
-					ambient = ambient.add(rayColorResult.multiply(collisionInfo.getClosestObject().getReflective()));
+			// Reflection Ray
+			if(!collisionInfo.getClosestObject().getReflective().isBlack() /*&& _ray.getType() != RayType.REFLECTION*/){
+				RColor reflections = ShaderFactory.makeShader(ShaderType.REFLECTION).doShader(this, collisionInfo, _ray, currentDepth);
+				if(reflections != null){
+					intersectionColor = intersectionColor.add(reflections);
 				}
+				intersectionColor = intersectionColor.multiplyByConstant(1.0f / currentDepth);
 			}
-			if(collisionInfo.getClosestObject().getMassType() == MassType.TRANSPARENT){
-				// Transmission ray
+			// Refraction Ray
+			if(collisionInfo.getClosestObject().getMassType() == MassType.TRANSPARENT /*&& _ray.getType() != RayType.TRANSMISSION*/){
+				intersectionColor = intersectionColor.add(ShaderFactory.makeShader(ShaderType.REFRACTION).doShader(this, collisionInfo, _ray, currentDepth));		
 			}
 		}
-		
-		// return final color
-		return ambient;
-	}
-	
-	/**
-	 * Casts ray from intersection to light source and computes intersections.
-	 * @param intersection
-	 * @param closestObject
-	 * @return
-	 */
-	private boolean isInShadow(Vector intersection, GraphicObject closestObject){
-		Vector shadowRay = this.scene.getLightSource().getDirection(intersection);
-		
-		// check for any collision for the light ray.
-		for(GraphicObject obj : this.scene){
-			// be sure we're not checking the object of the current intersection.
-			if(!obj.equals(closestObject)){
-				Vector collision = obj.doesCollide(intersection, shadowRay);
-				if(collision != null){
-					return true;
-				}
-			}
-		}
-		return false;
+		return intersectionColor;
 	}
 	
 	private CollisionInstance findCollidingObject(Ray _ray){
@@ -184,12 +132,10 @@ public class RayTracer {
 		
 		// Check and save all collision instances to be examined after.
 		for(GraphicObject obj : this.scene){
-			if(!obj.equals(_ray.getPreviousObject())){
-				Vector collision = obj.doesCollide(_ray.getInitialPos(), _ray.getRay());
-				if(collision != null){
-					collisions.add(collision);
-					objects.add(obj);
-				}
+			Vector collision = obj.doesCollide(_ray.getInitialPos(), _ray.getRay());
+			if(collision != null){
+				collisions.add(collision);
+				objects.add(obj);
 			}
 		}
 		
@@ -235,5 +181,9 @@ public class RayTracer {
 			e.printStackTrace();
 		}
 		// TODO: draws all pixels to a image file.
+	}
+	
+	public Scene getScene(){
+		return this.scene;
 	}
 }

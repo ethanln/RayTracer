@@ -33,15 +33,24 @@ public class RColor {
 	}
 	
 	public RColor multiply(RColor c){
-		return new RColor(this.R * c.R, this.G * c.G, this.B * c.B);
+		if(c != null){
+			return new RColor(this.R * c.R, this.G * c.G, this.B * c.B);
+		}
+		return this;
 	}
 	
 	public RColor add(RColor c){
-		return new RColor(this.R + c.R, this.G + c.G, this.B + c.B);
+		if(c != null){
+			return new RColor(this.R + c.R, this.G + c.G, this.B + c.B);
+		}
+		return this;
 	}
 	
 	public RColor substract(RColor c){
-		return new RColor(this.R - c.R, this.G - c.G, this.B - c.B);
+		if(c != null){
+			return new RColor(this.R - c.R, this.G - c.G, this.B - c.B);
+		}
+		return this;
 	}
 	
 	public RColor multiplyByConstant(float constant){

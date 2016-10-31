@@ -14,6 +14,10 @@ public class Sphere extends GraphicObject{
 	@Override
 	public Vector doesCollide(Vector initialPos, Vector direction) {
 		Vector n = direction.normalize();
+		
+		// translate intersection a little higher to avoid collision with the same object.
+		initialPos = initialPos.add(n.multiplyByConstant(0.001f));
+		
 		float x0 = initialPos.x;
 		float y0 = initialPos.y;
 		float z0 = initialPos.z;

@@ -25,8 +25,12 @@ public abstract class GraphicObject{
 	private RColor reflective;
 	private RColor diffuse;
 	private RColor specularHighlight;
+	private RColor transparency;
 	
 	private float phongConstant;
+	
+	private float refractionMaterial;
+
 	
 	/**
 	 * Constructor
@@ -38,7 +42,9 @@ public abstract class GraphicObject{
 		this.reflective = new RColor(0.0f, 0.0f, 0.0f);
 		this.diffuse = new RColor(0.0f, 0.0f, 0.0f);
 		this.specularHighlight = new RColor(0.0f, 0.0f, 0.0f);
+		this.setTransparency(new RColor(0.0f, 0.0f, 0.0f));
 		this.phongConstant = 0.0f;
+		this.refractionMaterial = 0.0f;
 	}
 	
 	/**
@@ -95,5 +101,21 @@ public abstract class GraphicObject{
 
 	public void setMassType(MassType massType) {
 		this.massType = massType;
+	}
+
+	public float getRefractionMaterial() {
+		return refractionMaterial;
+	}
+
+	public void setRefractionMaterial(float refractionMaterial) {
+		this.refractionMaterial = refractionMaterial;
+	}
+
+	public RColor getTransparency() {
+		return transparency;
+	}
+
+	public void setTransparency(RColor transparency) {
+		this.transparency = transparency;
 	}
 }
