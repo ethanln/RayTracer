@@ -11,7 +11,7 @@ public class Driver {
 		
 		//Scene s = SceneParser.buildScene("scenes//SceneII.rayTracing");
 		Scene s = SceneParser.buildScene("scenes//diffuse.rayTracing");
-		RayTracer tracer = new RayTracer(s, 800, 800, 5);
+		RayTracer tracer = new RayTracer(s, 800, 800, 7);
 		System.out.println("Tracing...");
 		tracer.trace();
 		System.out.println("Drawing...");

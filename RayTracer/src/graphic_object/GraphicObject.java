@@ -29,7 +29,8 @@ public abstract class GraphicObject{
 	
 	private float phongConstant;
 	
-	private float refractionMaterial;
+	private float refractionMaterialInside;
+	private float refractionMaterialOutside;
 
 	
 	/**
@@ -44,7 +45,8 @@ public abstract class GraphicObject{
 		this.specularHighlight = new RColor(0.0f, 0.0f, 0.0f);
 		this.setTransparency(new RColor(0.0f, 0.0f, 0.0f));
 		this.phongConstant = 0.0f;
-		this.refractionMaterial = 0.0f;
+		this.refractionMaterialInside = 0.0f;
+		this.refractionMaterialOutside = 0.0f;
 	}
 	
 	/**
@@ -103,19 +105,27 @@ public abstract class GraphicObject{
 		this.massType = massType;
 	}
 
-	public float getRefractionMaterial() {
-		return refractionMaterial;
-	}
-
-	public void setRefractionMaterial(float refractionMaterial) {
-		this.refractionMaterial = refractionMaterial;
-	}
-
 	public RColor getTransparency() {
 		return transparency;
 	}
 
 	public void setTransparency(RColor transparency) {
 		this.transparency = transparency;
+	}
+
+	public float getRefractionMaterialInside() {
+		return refractionMaterialInside;
+	}
+
+	public void setRefractionMaterialInside(float refractionMaterialInside) {
+		this.refractionMaterialInside = refractionMaterialInside;
+	}
+
+	public float getRefractionMaterialOutside() {
+		return refractionMaterialOutside;
+	}
+
+	public void setRefractionMaterialOutside(float refractionMaterialOutside) {
+		this.refractionMaterialOutside = refractionMaterialOutside;
 	}
 }

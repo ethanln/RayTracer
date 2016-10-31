@@ -53,6 +53,10 @@ public class RColor {
 		return this;
 	}
 	
+	public RColor substractConstantByColor(float constant){
+		return new RColor(constant - this.R, constant - this.G, constant - this.B);
+	}
+	
 	public RColor multiplyByConstant(float constant){
 		return new RColor(this.R * constant, this.G * constant, this.B * constant);
 	}

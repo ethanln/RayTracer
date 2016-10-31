@@ -118,4 +118,8 @@ public class Vector {
 	public Vector divideByConstant(float constant){
 		return new Vector(this.x / constant, this.y / constant, this.z / constant);
 	}
+	
+	public Vector invert(){
+		return new Vector(-this.x, -this.y, -this.z);
+	}
 }

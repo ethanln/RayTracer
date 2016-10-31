@@ -254,8 +254,10 @@ public class SceneParser {
 					break;
 				
 				case "Refraction":
-					float refraction = Float.parseFloat(reader.next());
-					s.setRefractionMaterial(refraction);
+					float refractionInside = Float.parseFloat(reader.next());
+					float refractionOutside = Float.parseFloat(reader.next());
+					s.setRefractionMaterialInside(refractionInside);
+					s.setRefractionMaterialOutside(refractionOutside);
 					break;
 					
 				default:
@@ -350,8 +352,10 @@ public class SceneParser {
 					break;
 				
 				case "Refraction":
-					float refraction = Float.parseFloat(reader.next());
-					p.setRefractionMaterial(refraction);
+					float refractionInside = Float.parseFloat(reader.next());
+					float refractionOutside = Float.parseFloat(reader.next());
+					p.setRefractionMaterialInside(refractionInside);
+					p.setRefractionMaterialOutside(refractionOutside);
 					break;
 					
 				default:
