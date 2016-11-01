@@ -10,8 +10,6 @@ import javax.imageio.ImageIO;
 
 import graphic_object.GraphicObject;
 import graphic_object.GraphicObject.MassType;
-import graphic_object.GraphicObject.ShapeType;
-import graphic_object.Sphere;
 import model.Scene;
 import raytracer.Ray.RayType;
 import shader.ShaderFactory;
@@ -116,11 +114,12 @@ public class RayTracer {
 				if(reflections != null){
 					intersectionColor = intersectionColor.add(reflections);
 				}
-				intersectionColor = intersectionColor.multiplyByConstant(1.0f / currentDepth);
+				//intersectionColor = intersectionColor.multiplyByConstant(1.0f / currentDepth); // HERE
 			}
 			// Refraction Ray
 			if(collisionInfo.getClosestObject().getMassType() == MassType.TRANSPARENT /*&& _ray.getType() != RayType.TRANSMISSION*/){
-				intersectionColor = intersectionColor.add(ShaderFactory.makeShader(ShaderType.REFRACTION).doShader(this, collisionInfo, _ray, currentDepth));		
+				RColor transparent = ShaderFactory.makeShader(ShaderType.REFRACTION).doShader(this, collisionInfo, _ray, currentDepth);
+				intersectionColor = intersectionColor.add(transparent);		
 			}
 		}
 		return intersectionColor;
@@ -133,6 +132,7 @@ public class RayTracer {
 		// Check and save all collision instances to be examined after.
 		for(GraphicObject obj : this.scene){
 			Vector collision = obj.doesCollide(_ray.getInitialPos(), _ray.getRay());
+			
 			if(collision != null){
 				collisions.add(collision);
 				objects.add(obj);

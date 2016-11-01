@@ -35,7 +35,7 @@ public class RefractionShader extends Shader{
 			
 		}
 		else{
-			float numerator = normal.dotProduct(_ray.getRay().normalize());
+			/*float numerator = normal.dotProduct(_ray.getRay().normalize());
 			float denominator = normal.getMagnitude() * _ray.getRay().normalize().getMagnitude();
 			float angle = (float)Math.acos(numerator / denominator);
 			
@@ -45,9 +45,9 @@ public class RefractionShader extends Shader{
 			
 			float angleOfRefraction = (float)Math.asin(collisionInfo.getClosestObject().getRefractionMaterialInside() * (float)Math.sin(angle) / collisionInfo.getClosestObject().getRefractionMaterialOutside());
 			
-			Vector T = M.multiplyByConstant((float)Math.sin(angleOfRefraction));
-			reflection = T.subtract(normal.multiplyByConstant((float)Math.cos(angleOfRefraction)));
-
+			Vector T = M.multiplyByConstant((float)Math.sin(angleOfRefraction));*/
+			//reflection = T.subtract(normal.multiplyByConstant((float)Math.cos(angleOfRefraction))).invert();
+			reflection = _ray.getPreviousRay();
 		}
 		Ray transmissionRay = new Ray();
 		transmissionRay.setRay(reflection);
@@ -59,9 +59,9 @@ public class RefractionShader extends Shader{
 		///transmissionRay.setPreviousRay(_ray.getRay());
 		
 		if(!_ray.isInsideShape() && collisionInfo.getClosestObject().getShapeType() == ShapeType.SPHERE){
+			transmissionRay.setPreviousRay(_ray.getRay());
 			transmissionRay.setInsideShape(true);
 		}
-		RColor remainingReflection = collisionInfo.getClosestObject().getReflective().substractConstantByColor(1.0f);
 		
 		//return collisionInfo.getClosestObject().getTransparency().multiply(tracer.rayTrace(transmissionRay, currentDepth));
 		return collisionInfo.getClosestObject().getTransparency().multiply(tracer.rayTrace(transmissionRay, currentDepth));

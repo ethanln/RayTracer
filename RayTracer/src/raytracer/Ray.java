@@ -1,13 +1,11 @@
 package raytracer;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import graphic_object.GraphicObject;
 import util.Vector;
 
-public class Ray implements Iterable<Ray>{
+public class Ray{
 	/**
 	 * Ray type enumerations, definitions for different kinds of casted rays.
 	 * @author Ethan
@@ -46,11 +44,6 @@ public class Ray implements Iterable<Ray>{
 	private RayType type; 
 	
 	/**
-	 * Child rays.
-	 */
-	private ArrayList<Ray> rays;
-	
-	/**
 	 * the object from which the ray was casted;
 	 */
 	private GraphicObject previousObject;
@@ -60,6 +53,8 @@ public class Ray implements Iterable<Ray>{
 	 */
 	private boolean isInsideShape;
 	
+	private Vector previousRay;
+	
 	public Ray(){	
 		this.color = null;
 		this.collisionPos = null;
@@ -67,11 +62,11 @@ public class Ray implements Iterable<Ray>{
 		this.ray = null;
 		this.type = RayType.NONE;
 		
-		this.rays = new ArrayList<Ray>();
-		
 		this.previousObject = null;
 		
 		this.isInsideShape = false;
+		
+		this.previousRay = null;
 	}
 
 	public Color getColor() {
@@ -106,15 +101,6 @@ public class Ray implements Iterable<Ray>{
 	public void setType(RayType type) {
 		this.type = type;
 	}
-	
-	public void addRay(Ray _ray){
-		this.rays.add(_ray);
-	}
-
-	@Override
-	public Iterator<Ray> iterator() {
-		return this.rays.iterator();
-	}
 
 	public Vector getInitialPos() {
 		return initialPos;
@@ -138,5 +124,13 @@ public class Ray implements Iterable<Ray>{
 
 	public void setInsideShape(boolean isInsideShape) {
 		this.isInsideShape = isInsideShape;
+	}
+
+	public Vector getPreviousRay() {
+		return previousRay;
+	}
+
+	public void setPreviousRay(Vector previousRay) {
+		this.previousRay = previousRay;
 	}
 }

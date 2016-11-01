@@ -122,4 +122,34 @@ public class Vector {
 	public Vector invert(){
 		return new Vector(-this.x, -this.y, -this.z);
 	}
+	
+	public static Vector crossProduct(Vector p1, Vector p2){
+		
+		Vector e1 = p1;
+		Vector e2 = p2;
+		
+		float xn = (e1.y * e2.z) - (e2.y * e1.z); // a2 * b3 - b2 * a3
+		float yn = (e1.z * e2.x) - (e2.z * e1.x); // a1 * b3 - b1 * a3
+		float zn = (e1.x * e2.y) - (e2.x * e1.y); // a1 * b2 - b1 * a2
+		
+		return new Vector(xn, yn, zn);
+
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if(obj == null){
+			return false;
+		}
+		try{
+			Vector v = (Vector)obj;
+			if(v.x == this.x && v.y == this.y && v.z == this.z){
+				return true;
+			}
+		}
+		catch(Exception e){
+			return false;
+		}
+		return false;
+	}
 }

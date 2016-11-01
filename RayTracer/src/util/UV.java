@@ -12,4 +12,12 @@ public class UV {
 	public UV translate(UV translation){
 		return new UV(this.u - translation.u, this.v - translation.v);
 	}
+	
+	public UV normalize(){
+		return new UV(this.u / this.magnitude(), this.v / this.magnitude());
+	}
+	
+	public float magnitude(){
+		return (float)Math.sqrt(Math.pow(this.u, 2) + Math.pow(this.v, 2));
+	}
 }
