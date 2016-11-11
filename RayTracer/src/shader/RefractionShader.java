@@ -35,7 +35,7 @@ public class RefractionShader extends Shader{
 			
 		}
 		else{
-			/*float numerator = normal.dotProduct(_ray.getRay().normalize());
+			float numerator = normal.dotProduct(_ray.getRay().normalize());
 			float denominator = normal.getMagnitude() * _ray.getRay().normalize().getMagnitude();
 			float angle = (float)Math.acos(numerator / denominator);
 			
@@ -45,10 +45,15 @@ public class RefractionShader extends Shader{
 			
 			float angleOfRefraction = (float)Math.asin(collisionInfo.getClosestObject().getRefractionMaterialInside() * (float)Math.sin(angle) / collisionInfo.getClosestObject().getRefractionMaterialOutside());
 			
-			Vector T = M.multiplyByConstant((float)Math.sin(angleOfRefraction));*/
-			//reflection = T.subtract(normal.multiplyByConstant((float)Math.cos(angleOfRefraction))).invert();
-			reflection = _ray.getPreviousRay();
+			if((float)Math.toDegrees(angleOfRefraction) < 0.0f || (float)Math.toDegrees(angleOfRefraction) > 90.0f){
+				return null;
+			}
+			
+			Vector T = M.multiplyByConstant((float)Math.sin(angleOfRefraction));
+			reflection = T.subtract(normal.multiplyByConstant((float)Math.cos(angleOfRefraction))).invert();
+			//reflection = _ray.getPreviousRay();	
 		}
+		
 		Ray transmissionRay = new Ray();
 		transmissionRay.setRay(reflection);
 		transmissionRay.setPreviousObject(null);

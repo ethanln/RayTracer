@@ -87,7 +87,7 @@ public class RayTracer {
 		CollisionInstance collisionInfo = this.findCollidingObject(_ray);
 
 		if(collisionInfo == null || collisionInfo.getClosestObject() == null || collisionInfo.getIntersection() == null){
-			if(_ray.getType() == RayType.PRIMARY || _ray.getType() == RayType.TRANSMISSION){
+			if(_ray.getType() == RayType.PRIMARY || _ray.getType() == RayType.TRANSMISSION || _ray.getType() == RayType.REFLECTION){
 				return this.scene.getBackgroundColor();
 			}
 			return null;  
